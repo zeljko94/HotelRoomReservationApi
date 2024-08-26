@@ -24,7 +24,7 @@ namespace RoomReservationApi.Services
             return _mapper.Map<IEnumerable<RoomDto>>(rooms);
         }
 
-        public async Task<RoomDto> GetRoomByIdAsync(int id)
+        public async Task<RoomDto> GetRoomByIdAsync(string id)
         {
             var room = await _roomRepository.GetByIdAsync(id);
             return _mapper.Map<RoomDto>(room);
@@ -37,7 +37,7 @@ namespace RoomReservationApi.Services
             await _roomRepository.SaveChangesAsync();
         }
 
-        public async Task<bool> UpdateRoomAsync(int id, RoomDto roomDto)
+        public async Task<bool> UpdateRoomAsync(string id, RoomDto roomDto)
         {
             var room = await _roomRepository.GetByIdAsync(id);
             if (room == null)
@@ -50,7 +50,7 @@ namespace RoomReservationApi.Services
             return await _roomRepository.SaveChangesAsync();
         }
 
-        public async Task<bool> DeleteRoomAsync(int id)
+        public async Task<bool> DeleteRoomAsync(string id)
         {
             var room = await _roomRepository.GetByIdAsync(id);
             if (room == null)
@@ -60,6 +60,16 @@ namespace RoomReservationApi.Services
 
             _roomRepository.Delete(room);
             return await _roomRepository.SaveChangesAsync();
+        }
+
+        public async Task DeleteRange(List<string> ids)
+        {
+            var korisniciToDelete = await _roomRepository.GetSobeByIdsAsync(ids);
+
+            if (korisniciToDelete.Any())
+            {
+                await _roomRepository.DeleteRange(korisniciToDelete);
+            }
         }
     }
 }

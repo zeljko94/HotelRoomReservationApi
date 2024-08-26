@@ -2,9 +2,9 @@
 
 namespace HotelRoomReservationApi.Models
 {
-    public class Soba : IdentityUser
+    public class Soba
     {
-        public int Id { get; set; }
+        public string Id { get; set; } = Guid.NewGuid().ToString();
         public int BrojKreveta { get; set; }
         public string Naziv { get; set; }
         public string Opis { get; set; }

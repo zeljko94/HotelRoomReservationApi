@@ -8,9 +8,10 @@ namespace RoomReservationApi.Services
     public interface ISobaService
     {
         Task<IEnumerable<RoomDto>> GetAllRoomsAsync();
-        Task<RoomDto> GetRoomByIdAsync(int id);
+        Task<RoomDto> GetRoomByIdAsync(string id);
         Task AddRoomAsync(CreateRoomDto roomDto);
-        Task<bool> UpdateRoomAsync(int id, RoomDto roomDto);
-        Task<bool> DeleteRoomAsync(int id);
+        Task<bool> UpdateRoomAsync(string id, RoomDto roomDto);
+        Task<bool> DeleteRoomAsync(string id);
+        Task DeleteRange(List<string> ids);
     }
 }

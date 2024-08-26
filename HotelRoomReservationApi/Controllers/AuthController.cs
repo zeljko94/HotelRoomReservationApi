@@ -23,7 +23,7 @@ namespace HotelRoomReservationApi.Controllers
             var token = await _authService.Login(loginDto);
             if (token == null) return Unauthorized("Invalid credentials");
 
-            return Ok(new { token });
+            return Ok(token);
         }
 
 

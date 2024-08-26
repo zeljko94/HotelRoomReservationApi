@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HotelRoomReservationApi.DTOs.User;
 using HotelRoomReservationApi.Models;
+using Microsoft.EntityFrameworkCore;
 using RoomReservationApi.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace RoomReservationApi.Services
             return _mapper.Map<IEnumerable<UserDto>>(users);
         }
 
-        public async Task<UserDto> GetUserByIdAsync(int id)
+        public async Task<UserDto> GetUserByIdAsync(string id)
         {
             var user = await _userRepository.GetByIdAsync(id);
             return _mapper.Map<UserDto>(user);
@@ -37,7 +38,7 @@ namespace RoomReservationApi.Services
             await _userRepository.SaveChangesAsync();
         }
 
-        public async Task<bool> UpdateUserAsync(int id, UserDto userDto)
+        public async Task<bool> UpdateUserAsync(string id, UserDto userDto)
         {
             var user = await _userRepository.GetByIdAsync(id);
             if (user == null)
@@ -50,7 +51,7 @@ namespace RoomReservationApi.Services
             return await _userRepository.SaveChangesAsync();
         }
 
-        public async Task<bool> DeleteUserAsync(int id)
+        public async Task<bool> DeleteUserAsync(string id)
         {
             var user = await _userRepository.GetByIdAsync(id);
             if (user == null)
@@ -60,6 +61,16 @@ namespace RoomReservationApi.Services
 
             _userRepository.Delete(user);
             return await _userRepository.SaveChangesAsync();
+        }
+
+        public async Task DeleteMultipleKorisniciAsync(List<string> ids)
+        {
+            var korisniciToDelete = await _userRepository.GetKorisniciByIdsAsync(ids);
+
+            if (korisniciToDelete.Any())
+            {
+                await _userRepository.DeleteMultipleKorisniciAsync(korisniciToDelete);
+            }
         }
     }
 }

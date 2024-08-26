@@ -8,9 +8,9 @@ namespace RoomReservationApi.Services
     public interface IRoomReservationService
     {
         Task<IEnumerable<RoomReservationDto>> GetAllReservationsAsync();
-        Task<RoomReservationDto> GetReservationByIdAsync(int id);
+        Task<RoomReservationDto> GetReservationByIdAsync(string id);
         Task AddReservationAsync(CreateRoomReservationDto reservationDto);
-        Task<bool> UpdateReservationAsync(int id, RoomReservationDto reservationDto);
-        Task<bool> DeleteReservationAsync(int id);
+        Task<bool> UpdateReservationAsync(string id, RoomReservationDto reservationDto);
+        Task<bool> DeleteReservationAsync(string id);
     }
 }

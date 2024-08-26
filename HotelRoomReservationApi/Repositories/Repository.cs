@@ -1,8 +1,6 @@
 ﻿using HotelRoomReservationApi.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using RoomReservationApi.Data;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace RoomReservationApi.Repositories
 {
@@ -20,7 +18,7 @@ namespace RoomReservationApi.Repositories
             return await _context.Set<T>().ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async Task<T> GetByIdAsync(string id)
         {
             return await _context.Set<T>().FindAsync(id);
         }
@@ -38,6 +36,12 @@ namespace RoomReservationApi.Repositories
         public void Delete(T entity)
         {
             _context.Set<T>().Remove(entity);
+        }
+
+        public async Task DeleteRange(List<T> entities)
+        {
+            _context.Set<T>().RemoveRange(entities);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> SaveChangesAsync()

@@ -17,16 +17,16 @@ namespace RoomReservationApi.Controllers
             _sobaService = sobaService;
         }
 
-        // GET: api/Rooms
+        // GET: api/Sobe
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RoomDto>>> GetRooms()
         {
             return Ok(await _sobaService.GetAllRoomsAsync());
         }
 
-        // GET: api/Rooms/5
+        // GET: api/Sobe/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<RoomDto>> GetRoom(int id)
+        public async Task<ActionResult<RoomDto>> GetRoom(string id)
         {
             var room = await _sobaService.GetRoomByIdAsync(id);
 
@@ -38,7 +38,7 @@ namespace RoomReservationApi.Controllers
             return Ok(room);
         }
 
-        // POST: api/Rooms
+        // POST: api/Sobe
         [HttpPost]
         public async Task<ActionResult<RoomDto>> PostRoom(CreateRoomDto roomDto)
         {
@@ -46,9 +46,9 @@ namespace RoomReservationApi.Controllers
             return CreatedAtAction(nameof(GetRoom), new { id = roomDto.Id }, roomDto);
         }
 
-        // PUT: api/Rooms/5
+        // PUT: api/Sobe/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRoom(int id, RoomDto roomDto)
+        public async Task<IActionResult> PutRoom(string id, RoomDto roomDto)
         {
             var result = await _sobaService.UpdateRoomAsync(id, roomDto);
             if (!result)
@@ -59,9 +59,9 @@ namespace RoomReservationApi.Controllers
             return NoContent();
         }
 
-        // DELETE: api/Rooms/5
+        // DELETE: api/Sobe/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRoom(int id)
+        public async Task<IActionResult> DeleteRoom(string id)
         {
             var result = await _sobaService.DeleteRoomAsync(id);
             if (!result)
@@ -70,6 +70,25 @@ namespace RoomReservationApi.Controllers
             }
 
             return NoContent();
+        }
+
+        [HttpPost("delete-multiple")]
+        public async Task<IActionResult> DeleteRange([FromBody] List<string> ids)
+        {
+            if (ids == null || ids.Count == 0)
+            {
+                return BadRequest("No IDs provided.");
+            }
+
+            try
+            {
+                await _sobaService.DeleteRange(ids);
+                return Ok(new { message = "Sobe successfully deleted." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while deleting sobe.");
+            }
         }
     }
 }

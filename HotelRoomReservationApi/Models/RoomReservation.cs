@@ -2,13 +2,14 @@
 
 namespace HotelRoomReservationApi.Models
 {
-    public class RoomReservation : IdentityUser
+    public class RoomReservation
     {
-        public string Id { get; set; }
-        public string RoomName { get; set; }
-        public string ReservedBy { get; set; }
-        public DateTime ReservationDate { get; set; }
-        public TimeSpan StartTime { get; set; }
-        public TimeSpan EndTime { get; set; }
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string UserId { get; set; }
+        public string RoomId { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public decimal Cijena { get; set; } 
+        public int BrojOsoba { get; set; }
     }
 }

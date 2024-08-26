@@ -3,6 +3,7 @@ using HotelRoomReservationApi.Models;
 using HotelRoomReservationApi.Repositories.Interfaces;
 using HotelRoomReservationApi.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using RoomReservationApi.Repositories;
 using System.IdentityModel.Tokens.Jwt;
@@ -52,7 +53,8 @@ namespace HotelRoomReservationApi.Services
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id),
-                    new Claim(ClaimTypes.Name, user.Username)
+                    new Claim(ClaimTypes.Name, user.Username),
+                    new Claim(ClaimTypes.Role, user.Role)
         }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

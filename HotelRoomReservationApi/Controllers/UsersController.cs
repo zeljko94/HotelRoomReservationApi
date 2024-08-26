@@ -1,4 +1,6 @@
-﻿using HotelRoomReservationApi.DTOs.User;
+﻿using HotelRoomReservationApi.DTOs.Auth;
+using HotelRoomReservationApi.DTOs.User;
+using HotelRoomReservationApi.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using RoomReservationApi.Services;
 using System.Collections.Generic;
@@ -11,10 +13,12 @@ namespace RoomReservationApi.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IAuthService _authService;
 
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService, IAuthService authService)
         {
             _userService = userService;
+            _authService = authService;
         }
 
         // GET: api/Users
@@ -26,7 +30,7 @@ namespace RoomReservationApi.Controllers
 
         // GET: api/Users/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserDto>> GetUser(int id)
+        public async Task<ActionResult<UserDto>> GetUser(string id)
         {
             var user = await _userService.GetUserByIdAsync(id);
 
@@ -40,15 +44,20 @@ namespace RoomReservationApi.Controllers
 
         // POST: api/Users
         [HttpPost]
-        public async Task<ActionResult<UserDto>> PostUser(CreateUserDto userDto)
+        public async Task<ActionResult<UserDto>> PostUser(RegisterDto userDto)
         {
-            await _userService.AddUserAsync(userDto);
-            return CreatedAtAction(nameof(GetUser), new { id = userDto.Id }, userDto);
+            var result = await _authService.Register(userDto);
+            if (!result)
+            {
+                return BadRequest(new { message = "User already exists" });
+            }
+
+            return Ok(new { message = "User added successfully!" });
         }
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, UserDto userDto)
+        public async Task<IActionResult> PutUser(string id, UserDto userDto)
         {
             var result = await _userService.UpdateUserAsync(id, userDto);
             if (!result)
@@ -61,7 +70,7 @@ namespace RoomReservationApi.Controllers
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
+        public async Task<IActionResult> DeleteUser(string id)
         {
             var result = await _userService.DeleteUserAsync(id);
             if (!result)
@@ -70,6 +79,26 @@ namespace RoomReservationApi.Controllers
             }
 
             return NoContent();
+        }
+
+        [HttpPost("delete-multiple")]
+        public async Task<IActionResult> DeleteMultipleKorisnici([FromBody] List<string> ids)
+        {
+            if (ids == null || ids.Count == 0)
+            {
+                return BadRequest("No IDs provided.");
+            }
+
+            try
+            {
+                await _userService.DeleteMultipleKorisniciAsync(ids);
+                return Ok(new { message = "Korisnici successfully deleted." });
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (not shown)
+                return StatusCode(500, "An error occurred while deleting korisnici.");
+            }
         }
     }
 }

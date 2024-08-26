@@ -27,7 +27,7 @@ namespace RoomReservationApi.Controllers
 
         // GET: api/RoomReservations/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<RoomReservationDto>> GetReservation(int id)
+        public async Task<ActionResult<RoomReservationDto>> GetReservation(string id)
         {
             var reservation = await _reservationsService.GetReservationByIdAsync(id);
 
@@ -49,7 +49,7 @@ namespace RoomReservationApi.Controllers
 
         // PUT: api/RoomReservations/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutReservation(int id, RoomReservationDto reservationDto)
+        public async Task<IActionResult> PutReservation(string id, RoomReservationDto reservationDto)
         {
             var result = await _reservationsService.UpdateReservationAsync(id, reservationDto);
             if (!result)
@@ -62,7 +62,7 @@ namespace RoomReservationApi.Controllers
 
         // DELETE: api/RoomReservations/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteReservation(int id)
+        public async Task<IActionResult> DeleteReservation(string id)
         {
             var result = await _reservationsService.DeleteReservationAsync(id);
             if (!result)

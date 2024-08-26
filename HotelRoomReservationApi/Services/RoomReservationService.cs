@@ -24,7 +24,7 @@ namespace RoomReservationApi.Services
             return _mapper.Map<IEnumerable<RoomReservationDto>>(reservations);
         }
 
-        public async Task<RoomReservationDto> GetReservationByIdAsync(int id)
+        public async Task<RoomReservationDto> GetReservationByIdAsync(string id)
         {
             var reservation = await _reservationsRepository.GetByIdAsync(id);
             return _mapper.Map<RoomReservationDto>(reservation);
@@ -37,7 +37,7 @@ namespace RoomReservationApi.Services
             await _reservationsRepository.SaveChangesAsync();
         }
 
-        public async Task<bool> UpdateReservationAsync(int id, RoomReservationDto reservationDto)
+        public async Task<bool> UpdateReservationAsync(string id, RoomReservationDto reservationDto)
         {
             var reservation = await _reservationsRepository.GetByIdAsync(id);
             if (reservation == null)
@@ -50,7 +50,7 @@ namespace RoomReservationApi.Services
             return await _reservationsRepository.SaveChangesAsync();
         }
 
-        public async Task<bool> DeleteReservationAsync(int id)
+        public async Task<bool> DeleteReservationAsync(string id)
         {
             var reservation = await _reservationsRepository.GetByIdAsync(id);
             if (reservation == null)
